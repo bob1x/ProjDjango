@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<div class="container">
+    <div class="row">
+        {% for poste in postes %}  <!-- Corrected variable name -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+             {% if poste.image %}
+            <img src="{{ poste.image.url }}" />
+            {% endif %}
+                <div class="card-body">
+
+                    <h5 class="card-title">{{ poste.get_poste_type_display }}</h5>
+                    <p class="card-text">Date: {{ poste.date_upload }}</p>
+                    <p class="card-text">User: {{ poste.user }}</p>
+                    <a href="{% url 'poste_details' id=poste.id %}" class="btn btn-primary">Check</a>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

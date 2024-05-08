@@ -1,0 +1,54 @@
+{% include "base.html" %}
+{% block content %}
+<body>
+  <h1>Poste Details</h1>
+  {% if error %}
+    <p>{{ error }}</p>
+  {% else %}
+    <div class="card" style="width: 18rem;">
+      {% if poste_type == 'recommandation' %}
+        <div class="card-body">
+            <img src="{{ poste_instance.image.url }}" width="170" hight="170" />
+          <h5 class="card-title">Recommandation Details</h5>
+          <p class="card-text"><strong>Text:</strong> {{ poste_instance.texte }}</p>
+        </div>
+      {% elif poste_type == 'transport' %}
+        <div class="card-body">
+          <h5 class="card-title">Transport Details</h5>
+            <img src="{{ poste_instance.image.url }}" width="170" hight="170" />
+          <p class="card-text"><strong>Depart:</strong> {{ poste_instance.depart }}</p>
+          <p class="card-text"><strong>Destination:</strong> {{ poste_instance.destination }}</p>
+          <p class="card-text"><strong>Nb sieges:</strong> {{ poste_instance.nbre_sieges }}</p>
+          <p class="card-text"><strong>heuredep :</strong> {{ poste_instance.heure_dep }}</p>
+          <p class="card-text"><strong>Contact :</strong> {{ poste_instance.contact_Trans }}</p>
+
+
+          <!-- Add other fields specific to Transport model -->
+        </div>
+      {% elif poste_type == 'logement' %}
+        <div class="card-body">
+          <h5 class="card-title">Logement Details</h5>
+            <img src="{{ poste_instance.image.url }}" width="170" hight="170" />
+
+          <p class="card-text"><strong>Localisation:</strong> {{ poste_instance.localisation }}</p>
+          <p class="card-text"><strong>Description:</strong> {{ poste_instance.description }}</p>
+          <p class="card-text"><strong>contact:</strong> {{ poste_instance.logment_contact }}</p>
+          <!-- Add other fields specific to Logement model -->
+        </div>
+      {% elif poste_type == 'stage' %}
+        <div class="card-body">
+          <h5 class="card-title">Stage Details</h5>
+           <img src="{{ poste_instance.image.url }}" width="170" hight="170" />
+          <p class="card-text"><strong>Company:</strong> {{ poste_instance.societe }}</p>
+          <p class="card-text"><strong>Duration:</strong> {{ poste_instance.duree }}</p>
+          <p class="card-text"><strong>type Stage :</strong> {{ poste_instance.typeStg }}</p>
+          <p class="card-text"><strong>contact:</strong> {{ poste_instance.contact_stage }}</p>
+          <p class="card-text"><strong>sujet:</strong> {{ poste_instance.sujet }}</p>
+          <p class="card-text"><strong>specialite :</strong> {{ poste_instance.specialite }}</p>
+
+        </div>
+    </div>
+      {% endif %}
+  {% endif %}
+</body>
+{% endblock content %}

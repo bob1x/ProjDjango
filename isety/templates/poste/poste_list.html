@@ -1,0 +1,133 @@
+<!-- poste_list.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <h2 class="mt-4 mb-4">Add Poste</h2>
+          <div class="form-group">
+            <button
+              class="btn btn-primary dropdown-toggle"
+              type="button"
+              id="post-type-dropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Select Post Type
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="post-type-dropdown">
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  data-post-type="recommandation"
+                  >Recommandation</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" data-post-type="transport"
+                  >Transport</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" data-post-type="logement"
+                  >Logement</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" data-post-type="stage"
+                  >Stage</a
+                >
+              </li>
+            </ul>
+          </div>
+          <form method="post" enctype="multipart/form-data" id="poste-form">
+            {% csrf_token %}
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll(".dropdown-item").forEach((item) => {
+        item.addEventListener("click", (event) => {
+          const selectedPostType = event.target.dataset.postType;
+          const createUrl =
+            window.location.origin +
+            "/poste/create/" +
+            selectedPostType +
+            "/";
+          window.location.href = createUrl;
+        });
+      });
+    </script>
+    <div class="col-md-12">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Type</th>
+            <th>poste type</th>
+            <th>Date Upload</th>
+            <th>User</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+             {% for poste in postes %}
+          <tr>
+            <td> {% if poste.image %}
+            <img src="{{poste.image.url}}" width="170" height="170" />
+            {% endif %}</td>
+            <td>{{ poste.get_poste_type_display }}</td>
+            <td>{% if poste.recommandation %}
+                Recommandation
+              {% elif poste.transport %}
+                Transport
+              {% elif poste.logement %}
+                Logement
+              {% elif poste.stage %}
+                Stage
+              {% endif %}</td>
+            <td>{{ poste.date_upload }}</td>
+            
+            <td>{{ poste.user }}</td>
+            <td>
+              {% if poste.recommandation %}
+
+                Text: {{ poste.recommandation.texte }}
+              {% elif poste.transport %}
+                Depart: {{ poste.transport.depart }}, Destination: {{ poste.transport.destination }}
+              {% elif poste.logement %}
+                Localisation: {{ poste.logement.localisation }}, Description: {{ poste.logement.description }}
+              {% elif poste.stage %}
+                 Company: {{ poste.stage.societe }}, Duration: {{ poste.stage.duree }}
+              {% endif %}
+            </td>
+            <td>
+              <a
+                href="{% url 'poste_update' id=poste.id %}"
+                class="btn btn-sm btn-primary"
+                >Update</a
+              >
+              <form
+                action="{% url 'poste_delete' id=poste.id %}"
+                method="post"
+                style="display: inline"
+              >
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-danger">
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
