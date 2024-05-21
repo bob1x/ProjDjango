@@ -1,54 +1,210 @@
-{% include "base.html" %}
-{% block content %}
-<body>
-  <h1>Poste Details</h1>
+{% include "base.html" %} {% block content %}
+<div class="container mx-auto py-8">
+  <h1 class="text-3xl font-semibold mb-4">Poste Details</h1>
   {% if error %}
-    <p>{{ error }}</p>
+  <p class="text-red-500">{{ error }}</p>
   {% else %}
-    <div class="card" style="width: 18rem;">
-      {% if poste_type == 'recommandation' %}
-        <div class="card-body">
-            <img src="{{ poste_instance.image.url }}" width="170" hight="170" />
-          <h5 class="card-title">Recommandation Details</h5>
-          <p class="card-text"><strong>Text:</strong> {{ poste_instance.texte }}</p>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Post Details Card -->
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <!-- User profile section -->
+        <a href="{% url 'profile' poste_instance.user.id %}">
+          <div class="flex items-center mb-4">
+            <img
+              src="{{ post_user.photo.url }}"
+              alt="{{ post_user.email }}"
+              class="w-12 h-12 rounded-full"
+            />
+            <div class="ml-4">
+              <p class="text-lg font-semibold">{{ post_user.email }}</p>
+            </div>
+          </div>
+        </a>
+        <!-- End of User profile section -->
+        <h2 class=" flex text-xl m-4 border-t-2  font-semibold mb-2 capitalize">
+            {{ poste_instance.poste_field }}
+          </h2>
+        <img
+          src="{{ poste_instance.image.url }}"
+          alt="{{ poste_instance.poste_field }}"
+          class="rounded-t-lg w-full mb-4"
+        />
+        <div>
+          
+          {% if poste_instance.poste_field == 'recommandation' %}
+          <p><strong >{{ poste_instance.recommandation.user }}</strong></p>
+          <p>
+            <strong>{{ poste_instance.recommandation.date_upload }}</strong>
+          </p>
+          <p><strong>{{ poste_instance.recommandation.texte }}</strong></p>
+          {% elif poste_instance.poste_field == 'transport' %}
+          <p><strong>Depart:</strong> {{ poste_instance.transport.depart }}</p>
+          <p>
+            <strong>Destination:</strong>
+           {{poste_instance.transport.destination}}
+          </p>
+          <p>
+            <strong>Nb sieges:</strong> {{ poste_instance.transport.nbre_sieges}}
+          </p>
+          <p>
+            <strong>Heure de départ:</strong>
+            {{poste_instance.transport.heure_dep }}
+          </p>
+          <p>
+            <strong>Contact:</strong> {{ poste_instance.transport.contact_Trans}}
+          </p>
+          {% elif poste_instance.poste_field == 'logement' %}
+          <p>
+            <strong>Localisation:</strong> {{ poste_instance.logement.localisation }}
+          </p>
+          <p>
+            <strong>Description:</strong> {{ poste_instance.logement.description}}
+          </p>
+          <p>
+            <strong>Contact:</strong> {{ poste_instance.logement.logment_contact}}
+          </p>
+          {% elif poste_instance.poste_field == 'stage' %}
+          <p><strong>Company:</strong> {{ poste_instance.stage.societe }}</p>
+          <p><strong>Duration:</strong> {{ poste_instance.stage.duree }}</p>
+          <p><strong>Type Stage:</strong> {{ poste_instance.stage.typeStg }}</p>
+          <p>
+            <strong>Contact:</strong> {{ poste_instance.stage.contact_stage }}
+          </p>
+          <p><strong>Sujet:</strong> {{ poste_instance.stage.sujet }}</p>
+          <p>
+            <strong>Specialite:</strong> {{ poste_instance.stage.specialite }}
+          </p>
+          {% endif %}
+          <div class="mt-4">
+            {% if user.is_authenticated %}
+            <form
+              action="{% url 'like' post_id=poste_instance.id %}"
+              method="post"
+            >
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="text-blue-500 hover:text-blue-700 focus:outline-none"
+              >
+                <img
+                  src="/media/site_pngs/like.png"
+                  alt="like"
+                  class="size-4"
+                />
+                {% if user_has_liked %}Unlike{% else %}Like{% endif %}
+              </button>
+              <span class="ml-2">{{ poste_instance.likes }} likes</span>
+            </form>
+            {% else %}
+            <p class="text-gray-500">Login to like this post</p>
+            <span class="ml-2">{{ poste_instance.likes }} likes</span>
+            {% endif %}
+          </div>
         </div>
-      {% elif poste_type == 'transport' %}
-        <div class="card-body">
-          <h5 class="card-title">Transport Details</h5>
-            <img src="{{ poste_instance.image.url }}" width="170" hight="170" />
-          <p class="card-text"><strong>Depart:</strong> {{ poste_instance.depart }}</p>
-          <p class="card-text"><strong>Destination:</strong> {{ poste_instance.destination }}</p>
-          <p class="card-text"><strong>Nb sieges:</strong> {{ poste_instance.nbre_sieges }}</p>
-          <p class="card-text"><strong>heuredep :</strong> {{ poste_instance.heure_dep }}</p>
-          <p class="card-text"><strong>Contact :</strong> {{ poste_instance.contact_Trans }}</p>
-
-
-          <!-- Add other fields specific to Transport model -->
-        </div>
-      {% elif poste_type == 'logement' %}
-        <div class="card-body">
-          <h5 class="card-title">Logement Details</h5>
-            <img src="{{ poste_instance.image.url }}" width="170" hight="170" />
-
-          <p class="card-text"><strong>Localisation:</strong> {{ poste_instance.localisation }}</p>
-          <p class="card-text"><strong>Description:</strong> {{ poste_instance.description }}</p>
-          <p class="card-text"><strong>contact:</strong> {{ poste_instance.logment_contact }}</p>
-          <!-- Add other fields specific to Logement model -->
-        </div>
-      {% elif poste_type == 'stage' %}
-        <div class="card-body">
-          <h5 class="card-title">Stage Details</h5>
-           <img src="{{ poste_instance.image.url }}" width="170" hight="170" />
-          <p class="card-text"><strong>Company:</strong> {{ poste_instance.societe }}</p>
-          <p class="card-text"><strong>Duration:</strong> {{ poste_instance.duree }}</p>
-          <p class="card-text"><strong>type Stage :</strong> {{ poste_instance.typeStg }}</p>
-          <p class="card-text"><strong>contact:</strong> {{ poste_instance.contact_stage }}</p>
-          <p class="card-text"><strong>sujet:</strong> {{ poste_instance.sujet }}</p>
-          <p class="card-text"><strong>specialite :</strong> {{ poste_instance.specialite }}</p>
-
-        </div>
+      </div>
     </div>
-      {% endif %}
+
+    <!-- Comment Section -->
+    <div class="bg-white shadow-lg rounded-lg p-8">
+      <section class="dark:bg-gray-900 antialiased">
+        <div>
+          <div class="flex justify-between items-center mb-6">
+            <h2
+              class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white"
+            >
+              Discussion ({{ comments.count }})
+            </h2>
+          </div>
+          {% if user.is_authenticated %}
+          <form class="mb-6" method="post">
+            {% csrf_token %}
+            <div
+              class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+            >
+              {{ comment_form }}
+            </div>
+            <button
+              type="submit"
+              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Post comment
+            </button>
+          </form>
+
+          {% else %}
+          <p class="text-gray-500">Login to post a comment</p>
+          {% endif %} {% for comment in comments %}
+          <article
+            class="border p-6 text-base bg-white rounded-lg dark:bg-gray-900 mb-4"
+          >
+            <footer class="flex justify-between items-center mb-2">
+              <div class="flex items-center">
+                <p
+                  class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"
+                >
+                  <img
+                    class="mr-2 w-10 h-10 rounded-full"
+                    src="{{ comment.user.photo.url }}"
+                    alt="{{ comment.user.email }}"
+                  />{{ comment.user.email }}
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    <time
+                    pubdate
+                    datetime="{{ comment.date|date:'Y-m-d' }}"
+                    title="{{ comment.date|date:'F j, Y' }}"
+                    >
+                    {{ comment.date|date:'M. j, Y' }}
+                    </time>
+                    <span class="ml-2">{{ comment.date|time:'H:i' }}</span>
+                </p>
+                <!-- Add your button and dropdown here -->
+                <button
+                  id="dropdownComment{{ forloop.counter }}Button"
+                  data-dropdown-toggle="dropdownComment{{ forloop.counter }}"
+                  class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 dark:text-gray-400 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                  type="button"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 16 3"
+                  >
+                    <path
+                      d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"
+                    />
+                  </svg>
+                  <span class="sr-only">Comment settings</span>
+                </button>
+                <!-- Dropdown menu -->
+                  <div id="dropdownComment{{ forloop.counter }}"
+                    class="hidden z-10 w-36 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                        aria-labelledby="dropdownMenuIconHorizontalButton">
+                        
+                        <li>
+                            <form method="post" action="">
+                                {% csrf_token %}
+                                <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                                <button type="submit" name="delete_comment" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        onclick="return confirm('Are you sure you want to delete this comment?');">Remove</button>
+                            </form>
+                        </li>
+                        
+                    </ul>
+                </div>
+              </div>
+            </footer>
+            <p class="text-gray-500 dark:text-gray-400">{{ comment.body }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+  </div>
   {% endif %}
-</body>
+</div>
 {% endblock content %}

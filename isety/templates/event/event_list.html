@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main>
+  <article>
+    <header class="mx-auto mt-20 max-w-screen-lg rounded-t-lg bg-white pt-16 text-center shadow-lg">
+      <h1 class="mt-2 text-4xl font-bold text-gray-900 sm:text-5xl">Featured Event</h1>
+
+      <div class="mt-6 flex flex-wrap justify-center gap-2">
+        <button class="rounded-lg bg-gray-100 px-2 py-1 font-medium text-gray-600 hover:bg-gray-200">Marketing</button>
+        <button class="rounded-lg bg-gray-100 px-2 py-1 font-medium text-gray-600 hover:bg-gray-200">Branding</button>
+        <button class="rounded-lg bg-gray-100 px-2 py-1 font-medium text-gray-600 hover:bg-gray-200">Digital</button>
+        <button class="rounded-lg bg-gray-100 px-2 py-1 font-medium text-gray-600 hover:bg-gray-200">Identity</button>
+      </div>
+      <img class="-z-10 absolute top-4 left-0 mt-10 h-96 w-full object-cover" src="/media/site_pngs/event-bg.jpg" alt="" />
+    </header>
+
+    {% for events in events %}
+    <div class="mx-auto max-w-screen-lg space-y-12 rounded-b-lg bg-white px-8 pt-10 pb-20 font-serif text-lg tracking-wide text-gray-700 sm:shadow-lg">
+      <h2 class="text-2xl font-semibold">Most liked upcoming event</h2>
+      <article class="flex flex-col items-center gap-4 md:flex-row lg:gap-6">
+        <a href="{% url 'event_detail' id=events.id %}" class="group shrink-0 relative block h-56 w-full self-start overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-24 md:w-24 lg:h-40 lg:w-40">
+          <img src="{{ events.img.url }}" class="group-hover:scale-110 absolute inset-0 h-full w-full object-cover  transition duration-200" />
+        </a>
+        <h1 class="mb-6 font-bold text-2xl">Created by : 
+          <img
+          class="h-12 w-12 rounded-full object-cover"
+          src="{{ events.user.photo.url }}"
+          alt=""
+        /> {{ events.user.first_name }}</h1>
+      <p>{{ events.title }}</p>
+      <hr>
+      <p>{{ events.description }}</p>
+    </div>
+    {% endfor %}
+  </article>
+</main>
+
+<div class="w-fit mx-auto mt-10 flex space-x-2">
+  <div class="h-0.5 w-2 bg-gray-600"></div>
+  <div class="h-0.5 w-32 bg-gray-600"></div>
+  <div class="h-0.5 w-2 bg-gray-600"></div>
+</div>
+
+<aside aria-label="Recent Posts" class="mx-auto mt-10 max-w-screen-xl py-20">
+  <div class="mx-auto max-w-screen-xl px-4 md:px-8">
+    <!-- Heading -->
+    <div class="mb-10 md:mb-16">
+      <h2 class="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl">Upcoming Events</h2>
+    </div>
+    <!-- /Heading -->
+    <div class="grid gap-8 sm:grid-cols-2 sm:gap-12 lg:grid-cols-2 xl:grid-cols-2 xl:gap-16">
+      <!-- Article -->
+      {% for event in events %}
+      <article class="flex flex-col items-center gap-4 md:flex-row lg:gap-6">
+        <a href="{% url 'event_detail' id=event.id %}" class="group shrink-0 relative block h-56 w-full self-start overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-24 md:w-24 lg:h-40 lg:w-40">
+          <img src="{{event.img.url}}" loading="lazy" alt="" class="group-hover:scale-110 absolute inset-0 h-full w-full object-cover object-center transition duration-200" />
+        </a>
+
+        <div class="flex flex-col gap-2">
+          <span class="text-sm text-gray-400">{{ event.date_enev }}</span>
+
+          <h2 class="text-xl font-bold text-gray-800">
+            <a href="#" class="active:text-rose-600 transition duration-100 hover:text-rose-500">{{event.title}}</a>
+          </h2>
+
+          <p class="text-gray-500">{{event.description}}</p>
+            <p class="text-gray-500">in {{event.place}}</p>
+            <p class="text-gray-500"><strong>Tickets left  :</strong> {{event.place_dispo}}</p>
+
+
+
+          <div>
+            <a href="{% url 'event_detail' id=event.id %}" class="active:text-rose-700 font-semibold text-rose-500 transition duration-100 hover:text-rose-600">Read more</a>
+          </div>
+        </div>
+      </article>
+        <!-- /Article -->
+        {% endfor %}
+
+    </div>
+  </div>
+</aside>
+
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, Recommandation, Transport, Logement, Stage, Reaction, Evenement, EvenClub
+from .models import User,Poste, Recommandation, Message,Conversation,Transport, Logement, Stage,FriendRequest , Likes,Comment,Notification, Evenement, Intrested,Archives
 from django.contrib.auth.models import Group
 
 class CustomUserAdmin(BaseUserAdmin):
@@ -24,14 +24,18 @@ class CustomUserAdmin(BaseUserAdmin):
     ordering = ('email',)
 
 admin.site.register(User, CustomUserAdmin)
-
+admin.site.register(Poste)
 admin.site.register(Recommandation)
 admin.site.register(Transport)
 admin.site.register(Logement)
 admin.site.register(Stage)
-admin.site.register(Reaction)
 admin.site.register(Evenement)
-admin.site.register(EvenClub)
-
+admin.site.register(Comment)
+admin.site.register(Notification)
+admin.site.register(Intrested)
+admin.site.register(FriendRequest)
+admin.site.register(Conversation)
+admin.site.register(Message)
 # Unregister the Group model from admin since we are using a custom User model
 admin.site.unregister(Group)
+admin.site.register(Archives)

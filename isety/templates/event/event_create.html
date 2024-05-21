@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto">
+  <div class="flex justify-center">
+    <div class="w-full max-w-lg">
+      <div class="bg-white shadow-md rounded-lg mt-8">
+        <div class="bg-gray-200 px-4 py-3 rounded-t-lg">
+          <h2 class="text-lg font-semibold">Add Event</h2>
+        </div>
+        <div class="px-8 py-6">
+          <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+              {% if field.name == 'date_enev' %}
+                <div class="mb-4">
+                  <label for="date_enev" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Date:</label>
+                  <div class="relative max-w-sm">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                      {% comment %} <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                      </svg> {% endcomment %}
+                    </div>
+                    <input type="date" id="date_enev" name="date_enev" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date" required>
+                  </div>
+                  {% for error in field.errors %}
+                    <p class="text-red-500 text-xs italic">{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% elif field.name == 'heure_deb' %}
+                <div class="mb-4">
+                  <label for="heure_deb" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Time:</label>
+                  <div class="relative max-w-sm">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                      {% comment %} <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
+                      </svg> {% endcomment %}
+                    </div>
+                    <input type="time" id="heure_deb" name="heure_deb" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" min="09:00" max="18:00" value="00:00" required>
+                  </div>
+                  {% for error in field.errors %}
+                    <p class="text-red-500 text-xs italic">{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <div class="mb-4">
+                  {{ field.label_tag }}
+                  {{ field }}
+                  {% for error in field.errors %}
+                    <p class="text-red-500 text-xs italic">{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endfor %}
+            <div class="flex items-center justify-between">
+              <input type="submit" value="Submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

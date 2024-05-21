@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="border rounded-lg overflow-hidden m-4 shadow-lg">
+  <div class="sticky top-0 z-50 border-b border-gray-300 bg-white py-5 px-8 text-left text-sm text-gray-800">
+    <h4 class="inline-block py-1 text-left font-sans font-semibold normal-case">{{ conversation.participants.all|join:", " }}</h4>
+  </div>
+  <div class="flex-grow px-8 pt-8 text-left text-gray-700">
+    {% for message in conversation.messages.all %}
+      <div class="relative mb-6 text-left">
+        <div class="text-gray-700">
+          {% if message.sender == request.user %}
+            <div class="relative float-right mr-8 sm:mr-16 inline-block rounded-md bg-blue-700 py-3 px-4 text-white">
+          {% else %}
+            <div class="relative float-left ml-8 sm:ml-16 inline-block rounded-md bg-gray-200 py-3 px-4">
+          {% endif %}
+            <h4 class="text-sm font-semibold">{{ message.sender.first_name }}</h4>
+            <p class="text-sm">{{ message.content }}</p>
+          </div>
+        </div>
+        <div class="clear-both flex text-gray-700"></div>
+      </div>
+      <div class="relative mb-6 text-center">
+        <span class="relative bg-white px-2 text-sm text-gray-600">{{ message.timestamp }}</span>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="mt-4 flex items-start border-t border-gray-300 sm:p-8 py-4 text-left text-gray-700">
+    <form method="post" action="{% url 'create_message' conversation.id %}">
+      {% csrf_token %}
+      <textarea name="content" cols="1" rows="1" placeholder="Your Message" class="mr-4 overflow-hidden w-full flex-1 cursor-text resize-none rounded-md bg-white text-sm py-2 sm:py-0 font-normal text-gray-600 opacity-70 shadow-none outline-none focus:text-gray-600 focus:opacity-100"></textarea>
+      <button type="submit" class="relative inline-flex h-10 w-auto flex-initial cursor-pointer items-center justify-center self-center rounded-md bg-blue-700 px-6 text-center align-middle text-sm font-medium text-white outline-none focus:ring-2">Send</button>
+    </form>
+  </div>
+</div>
+{% endblock content %}
