@@ -7,32 +7,38 @@
       <h1 class="mt-2 text-4xl font-bold text-gray-900 sm:text-5xl">Featured Event</h1>
 
       <div class="mt-6 flex flex-wrap justify-center gap-2">
-        <button class="rounded-lg bg-gray-100 px-2 py-1 font-medium text-gray-600 hover:bg-gray-200">Marketing</button>
-        <button class="rounded-lg bg-gray-100 px-2 py-1 font-medium text-gray-600 hover:bg-gray-200">Branding</button>
-        <button class="rounded-lg bg-gray-100 px-2 py-1 font-medium text-gray-600 hover:bg-gray-200">Digital</button>
+        <button class="rounded-lg bg-gray-100 px-2 py-1 font-medium text-gray-600 hover:bg-gray-200">Events</button>
+        <button class="rounded-lg bg-gray-100 px-2 py-1 font-medium text-gray-600 hover:bg-gray-200">Parties</button>
+        <button class="rounded-lg bg-gray-100 px-2 py-1 font-medium text-gray-600 hover:bg-gray-200">Education</button>
         <button class="rounded-lg bg-gray-100 px-2 py-1 font-medium text-gray-600 hover:bg-gray-200">Identity</button>
       </div>
       <img class="-z-10 absolute top-4 left-0 mt-10 h-96 w-full object-cover" src="/media/site_pngs/event-bg.jpg" alt="" />
     </header>
 
-    {% for events in events %}
+    {% if most_liked_event %}
     <div class="mx-auto max-w-screen-lg space-y-12 rounded-b-lg bg-white px-8 pt-10 pb-20 font-serif text-lg tracking-wide text-gray-700 sm:shadow-lg">
-      <h2 class="text-2xl font-semibold">Most liked upcoming event</h2>
+      <h2 class="text-2xl font-semibold">Most liked upcoming event:</h2>
+      <p class="justify-items-center font-bold capitalize border-b-2 border-gray-400">{{ most_liked_event.title }}</p>
+
       <article class="flex flex-col items-center gap-4 md:flex-row lg:gap-6">
-        <a href="{% url 'event_detail' id=events.id %}" class="group shrink-0 relative block h-56 w-full self-start overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-24 md:w-24 lg:h-40 lg:w-40">
-          <img src="{{ events.img.url }}" class="group-hover:scale-110 absolute inset-0 h-full w-full object-cover  transition duration-200" />
+        <a href="{% url 'event_detail' id=most_liked_event.id %}" class="group shrink-0 relative block h-56 w-full self-start overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-24 md:w-24 lg:h-40 lg:w-40">
+          <img src="{{ most_liked_event.img.url }}" class="group-hover:scale-110 absolute inset-0 h-full w-full object-cover transition duration-200" />
         </a>
-        <h1 class="mb-6 font-bold text-2xl">Created by : 
-          <img
-          class="h-12 w-12 rounded-full object-cover"
-          src="{{ events.user.photo.url }}"
-          alt=""
-        /> {{ events.user.first_name }}</h1>
-      <p>{{ events.title }}</p>
-      <hr>
-      <p>{{ events.description }}</p>
+        <div>
+          <h1 class="mb-6 border-b-2 font-bold text-2xl">Created by: {{ most_liked_event.user.first_name }}</h1>
+          <hr>
+          <p>{{ most_liked_event.date_enev }}</p>
+          <p class="font-bold">Will be held in: {{ most_liked_event.place }}</p>
+          <p>Places left: {{ most_liked_event.place_dispo }}</p>
+        </div>
+        <div class="mt-4">
+          <a href="{% url 'event_detail' id=most_liked_event.id %}" class="active:text-rose-700 font-semibold text-rose-500 transition duration-100 hover:text-rose-600">Read more</a>
+        </div>
+      </article>
     </div>
-    {% endfor %}
+    {% else %}
+    <p class="text-center text-lg font-semibold text-gray-700">No upcoming events found.</p>
+    {% endif %}
   </article>
 </main>
 

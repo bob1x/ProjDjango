@@ -21,6 +21,8 @@ from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
+from django.db.models import Count
+
 
 
 # Create your views here.
@@ -431,20 +433,19 @@ def event_delete(request, id):
 
 def my_events(request):
     user = request.user
-    
     today = timezone.now()
     
     # Retrieve the list of friends for the current user
     friends = user.friends.all()
     
-    # Retrieve all postes
-    events =[]
-    
-    
-    events = Evenement.objects.filter(user=request.user)
-    
-    return render(request, "event/my_events.html", {"events": events, "friends": friends , "today": today})
-    
+    # Retrieve events the user is interested in
+    interested_events = Intrested.objects.filter(user=user).select_related('event')
+
+    return render(request, "event/my_events.html", {
+        "interested_events": interested_events,
+        "friends": friends,
+        "today": today
+    })
 
 def event_list(request):
       # Filter events that have a date greater than or equal to the current time
@@ -454,12 +455,15 @@ def event_list(request):
     past_events = Evenement.objects.filter(date_enev__lt=timezone.now())
     past_events.delete()
     
-    # Get featured events
-    featured_evenements = Evenement.objects.order_by('-interest')[:6]
+   
+    most_liked_event = Evenement.objects.annotate(
+        num_interests=Count('event_intrest')
+    ).order_by('-num_interests').first()
     
     return render(request, 'event/event_list.html', {
         'events': events,
-        'featured_evenements': featured_evenements
+        'most_liked_event': most_liked_event
+        # 'most_liked': most_liked
     })
 
 def event_detail(request, id):
@@ -565,7 +569,7 @@ def create_conversation(request,user_id):
         # Add participants to the conversation
         conversation.participants.add(*participant_ids)
 
-        # Redirect to the conversation detail page
+        # Redirect to the conversation detail page 
         return redirect('conversation_detail', conversation_id=conversation.id)
     else:
         # Handle GET request
